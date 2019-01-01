@@ -64,7 +64,7 @@ void readboard(int A[N][N])
 	file.close();
 }
 
-void choose_chess(int x_destination, int y_destination) //選定要下的棋子，把座標輸出"1072016.txt"裡，且換行
+void choose_chess(int x_destination, int y_destination) //找最小值
 {
 	
 	int x = 0;
