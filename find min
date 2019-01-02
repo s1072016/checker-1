@@ -14,8 +14,10 @@ const int N = 17;
 int A[N][N];
 void readboard(int A[N][N]);
 double r = 0; //棋子與所要下的目標的距離
-double r1 = 0; 
+double r1 = 0;
 double r2 = 0;
+double r3 = 0;
+double r4 = 0;
 HWND hwnd;
 int Color_Name;//棋子的顏色
 
@@ -31,14 +33,12 @@ void kind_my_another();//分辨敵我方
 void search(); //找棋子的位置
 void choose_chess(int x_destination, int y_destination);  //指定這一局要移動的座標並輸出，指定棋子與目的地座標的距離
 
-int main(int argc,char *argv[])
-{
-	int count = 0;
+int main(int argc, char *argv[])
+{;
 	readboard(A);
 	kind_my_another();
 	search();
-	
-	if (argc > 1) 
+	if (argc > 1)
 	{
 		if (!strcmp(argv[1], "2"))
 		{
@@ -63,11 +63,11 @@ int main(int argc,char *argv[])
 		{
 			cout << "wrong COLOR!!!" << endl;
 		}
-		
+
 	}
-	else 
+	else
 	{
-		
+
 	}
 }
 
@@ -86,8 +86,6 @@ void readboard(int A[N][N])
 
 void choose_chess(int x_destination, int y_destination) //選定要下的棋子，把座標輸出"1072016.txt"裡，且換行
 {
-	int count = 0;
-	int	COUNT;
 	int x = 0;
 	int y = 0;
 	int i, j;
@@ -104,22 +102,23 @@ void choose_chess(int x_destination, int y_destination) //選定要下的棋子�
 			if (A[i][j] == Color_Name)
 			{
 				//---選一個棋子的過程----//
-				cout << i << "," << x_destination << "," << j << "," << y_destination << endl;//DEBUG
+				//DEBUG
 				r = (i - x_destination) *(i - x_destination) + (j - y_destination) * (j - y_destination);//取點對點距離但不取根號
-				A[i][j] = r; //將A[i][j]的值改為r
-				cout << A[i][j] << endl;//DEBUG
-				if (A[i][j] < temp)//找最小值
+				 //將A[i][j]的值改為r
+				//DEBUG
+				cout << i << "," << x_destination << "," << j << "," << y_destination << ","<< A[i][j] <<endl;
+				if (r < temp && r != 0)//找最小值
 				{
-					temp = A[i][j];
-					I = i;
+					temp =r;
 					J = j;
+					I = i;
 				}
 
 			}
 		}
 	}
-	cout << temp << endl;//DEBUG
-	cout << I << "," << J << endl;//DEBUG
+	//DEBUG
+	cout << I << "," << J << "," << temp << endl;//DEBUG
 	for (int i = 0; i < N; i++)
 	{
 		for (int j = 0; j < N; j++)
@@ -127,16 +126,94 @@ void choose_chess(int x_destination, int y_destination) //選定要下的棋子�
 			file >> A[i][j];
 			if (Color_Name == 2)
 			{
-				r1 = ((I+1) - x_destination) *((J-1) - x_destination) + ((I+1) - y_destination) * ((J-1) - y_destination);
-				r2 = ((I + 1) - x_destination) *((J) - x_destination) + ((I + 1) - y_destination) * ((J) - y_destination);
+				r1 = ((I + 1) - x_destination) *((I + 1) - x_destination) + ((J - 1) - y_destination) * ((J - 1) - y_destination);
+				r2 = ((I + 1) - x_destination) *((I + 1)-x_destination) + ((J) - y_destination) * ((J)-y_destination);
+				r3 = ((I) - x_destination) *((I)-x_destination) + ((J - 1) - y_destination) * ((J-1)-y_destination);
+				r4 = ((I) - x_destination) *((I)-x_destination) + ((J + 1) - y_destination) * ((J+1)-y_destination);
+			}
+			else if(Color_Name == 3)
+			{
+				r1 = ((I) - x_destination) *((I) - x_destination) + ((J+1) - y_destination) * ((J +1) - y_destination);
+				r2 = ((I - 1) - x_destination) *((I-1)-x_destination) + ((J+ 1) - y_destination) * ((J+1)-y_destination);
+				r3 = ((I-1)-x_destination) *((I-1) - x_destination) + ((J)-y_destination) * ((J) - y_destination);
+				r4 = ((I + 1) - x_destination) *((I + 1)-x_destination) + ((J) - y_destination) * ((J)-y_destination);
 			}
 		}
 	}
 	file.close();
-	cout << r1 << endl;//DEBUG
-	cout << I+1 << "," << J-1 << endl;//DEBUG
-	cout << r2 << endl;//DEBUG
-	cout << I + 1 << "," << J << endl;//DEBUG
+	if (Color_Name == 2)//紅
+	{
+		cout << A[I + 1][J - 1] << "," << A[I + 1][J] << "," << A[I - 1][J] << "," << A[I][J + 1] << endl;
+		if (r1 < r2 && r1 < r3 && r1 < r4)//找最短距離
+		{
+			if (A[I + 1][J - 1] == 1)
+			{
+				cout << I + 1 << "," << J - 1 << "," << r1 << endl;
+			}
+			else if (A[I + 1][J - 1] != 1 && A[I + 1][J] ==1)
+			{
+				cout << I + 1 << "," << J << "," << r2 << endl;
+			}
+			else if (A[I][J + 1] == 1 &&A[I + 1][J - 1] != 1 && A[I + 1][J] != 1  )
+			{
+				cout << I << "," << J+1 << "," << r2 << endl;
+			}
+			else
+			{
+
+			}
+		}
+		else if (r1 < r2 && r1 < r3 && r1 < r4 && A[I + 1][J - 1] != 1 && A[I + 1][J] == 1)//左下有棋往右下走
+		{
+			cout << I + 1 << "," << J << "," << r2 << endl;
+		}
+		else if (r1 < r2 && r1 < r3 && r1 < r4 && A[I + 1][J - 1] != 1 && A[I + 1][J] != 1 && A[I-1][J]!= 1 && A[I][J+1] == 1)//右
+		{
+			cout << I << "," << J+1 << "," << r2 << endl;
+		}
+		else if (r2 < r1 && r2 < r3 && r2 < r4&& A[I + 1][J] == 1)
+		{
+			cout << I + 1 << "," << J << "," << r2 << endl;
+		}
+		else if (r3 < r1 && r3 < r2 && r3 < r4&& A[I][J - 1] == 1)
+		{
+			cout << I << "," << J-1 << "," << r3 << endl;
+		}
+		else if (r4 < r1 && r4 < r3 && r4 < r2&& A[I][J + 1] == 1)
+		{
+			cout << I << "," << J+1 << "," << r4 << endl;
+		}
+		
+		else
+		{
+
+		}
+	}
+	else if (Color_Name == 3)
+	{
+		cout << A[I][J + 1] << A[I - 1][J+1] << A[I-1][J] << A[I+1][J];
+		if (r1 < r2  && r1 < 3 && r1 < r4)
+		{
+			cout << I << "," << J + 1 << "," << r1 << endl;
+		}
+		else if (r2 < r1 && r2 < r3 && r2 < r4)
+		{
+			cout << I - 1 << "," << J + 1 << "," << r2 << endl;
+		}
+		else if (r3 < r1 && r3 < r2 && r3 < r4)
+		{
+			cout << I - 1 << "," << J << "," << r3 << endl;
+		}
+		else if (r4 < r1 && r4 < r3 && r4 < r2)
+		{
+			cout << I + 1 << "," << J << "," << r4 << endl;
+		}
+		else
+		{
+
+		}
+	}
+	
 }
 
 
