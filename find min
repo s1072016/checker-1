@@ -28,8 +28,8 @@ struct Chess
 	int y; //棋子的y座標
 	int c; //顏色
 };
-struct Chess my_checker[15];//存放自己棋子所在位置的座標的陣列
-struct Chess another_checker[15];//存放敵方棋子所在位置的座標的陣列
+struct Chess my_checker[30];//存放自己棋子所在位置的座標的陣列
+struct Chess another_checker[30];//存放敵方棋子所在位置的座標的陣列
 void Redreadboard(int A[N][N]);
 void kind_my_another();//分辨敵我方
 void search(); //找棋子的位置
